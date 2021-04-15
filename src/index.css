@@ -1,0 +1,61 @@
+:root {
+  --imperial-red: #e63946ff;
+  --honeydew: #f1faeeff;
+  --powder-blue: #a8dadcff;
+  --celadon-blue: #457b9dff;
+  --prussian-blue: #1d3557ff;
+}
+
+body {
+    font: 44px "Century Gothic", Futura, sans-serif;
+    margin: 20px;
+    background-color: var(--prussian-blue);
+    color: var(--honeydew)
+  }
+
+.container {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: auto auto auto auto;
+  width: 50%;
+  padding: 30px;
+  border: 3px #f1faee solid;
+  margin: auto
+}
+
+.buttonPrimary {
+  text-align: center;
+  padding: 10px;
+  background-color: var(--celadon-blue);
+  border: 3px var(--powder-blue) solid;
+  cursor:pointer;
+}
+
+.buttonSecondary {
+  text-align: center;
+  padding: 10px;
+  background-color:var(--imperial-red);
+  border: 3px var(--powder-blue) solid;
+  cursor:pointer;
+}
+
+.buttonClear {
+  grid-column: 4 / span 1;
+  text-align: center;
+  padding: 10px;
+  background-color:var(--imperial-red);
+  border: 3px var(--powder-blue) solid;
+  cursor:pointer;
+}
+
+.lcdDisplay {
+  grid-column: 1 / span 4;
+  background-color: var(--powder-blue);
+  font-family: 'Segment7Standard';
+  font-weight: normal;
+  font-style: italic;
+  color: #000000;
+  text-align: right;
+  height: 50px;
+  padding: 10px 10px 0 0;
+}
