@@ -8,7 +8,6 @@
 
 body {
     font: 44px "Century Gothic", Futura, sans-serif;
-    margin: 20px;
     background-color: var(--prussian-blue);
     color: var(--honeydew)
   }
@@ -17,7 +16,7 @@ body {
   display: grid;
   grid-gap: 10px;
   grid-template-columns: auto auto auto auto;
-  width: 50%;
+  max-width: 10em;
   padding: 30px;
   border: 3px #f1faee solid;
   margin: auto
