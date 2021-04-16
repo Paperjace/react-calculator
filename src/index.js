@@ -16,8 +16,9 @@ class Calculator extends React.Component {
     this.state = {
       displayNums: [0],
       cache: [],
-      result: 0,      
-      awaitingNextNumber: false
+      result: 0,
+      awaitingNextNumber: false,
+      isFloat: false
     }
   }
 
@@ -26,7 +27,8 @@ class Calculator extends React.Component {
       displayNums:[0],
       cache: [],
       result: 0,
-      awaitingNextNumber: false
+      awaitingNextNumber: false,
+      isFloat: false
     })
   }
 
@@ -50,8 +52,9 @@ class Calculator extends React.Component {
     this.setState({
       result: mathResult,
       awaitingNextNumber: true,
-      displayNums: mathResult,
-      cache: []
+      displayNums: [mathResult],
+      cache: [],
+      isFloat: false
     })
   }
 
@@ -60,28 +63,38 @@ class Calculator extends React.Component {
   }
 
   numpad = (number) => {
+    const newNumber = this.state.cache.concat(number)
+
+    if(this.state.awaitingNextNumber && this.state.isFloat){
+      newNumber.splice(0, 0, '.')
+    }
+
     this.setState({
-      displayNums:this.state.cache.concat(number),
-      cache:this.state.cache.concat(number),
-      awaitingNextNumber: false
+      displayNums: newNumber,
+      cache: newNumber,
+      awaitingNextNumber: false,
+      isFloat: false
     })   
   }
 
   decimal = () => {
-    if(this.state.awaitingNextNumber){
-      this.setState({
-        displayNums:[],
-        cache:[],
-        awaitingNextNumber: false
-      })
-    }
-
     if(this.state.displayNums.includes('.')) return
-    this.setState({
-      displayNums:this.state.displayNums.concat('.'),
-      // cache:this.state.displayNums.concat('.'),
-      awaitingNextNumber: false
-    })
+
+    if(this.state.awaitingNextNumber) {
+      this.setState({
+        displayNums:['.'],
+        cache:['.'],
+        awaitingNextNumber: false,
+        isFloat: true
+      })      
+    } else {
+      this.setState({
+        displayNums:this.state.displayNums.concat('.'),
+        cache:this.state.displayNums.concat('.'),
+        awaitingNextNumber: false,
+        isFloat: true
+      })      
+    }
   }
 
   render() {
