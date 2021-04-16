@@ -7,20 +7,26 @@ function Button(props) {
 }
 
 function LCDDisplay(props) {
-  return <div className="lcdDisplay">{props.memory}</div>  
+  return <div className="lcdDisplay">{props.cache}</div>  
 }
 
 class Calculator extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      memory: ['0']
+      displayNums: [0],
+      cache: [],
+      result: 0,      
+      awaitingNextNumber: false
     }
   }
 
   clear = () => {
     this.setState({
-      memory: [0]
+      displayNums:[0],
+      cache: [],
+      result: 0,
+      awaitingNextNumber: false
     })
   }
 
@@ -37,7 +43,16 @@ class Calculator extends React.Component {
   }
 
   add = () => {
-    alert('you clicked ADD')
+    const formattedNumber = this.state.displayNums.join('')
+    const parsedNumber = parseFloat(formattedNumber)
+    const mathResult = this.state.result + parsedNumber
+    
+    this.setState({
+      result: mathResult,
+      awaitingNextNumber: true,
+      displayNums: mathResult,
+      cache: []
+    })
   }
 
   equals = () => {
@@ -46,34 +61,53 @@ class Calculator extends React.Component {
 
   numpad = (number) => {
     this.setState({
-      memory:this.state.memory.concat(number)
+      displayNums:this.state.cache.concat(number),
+      cache:this.state.cache.concat(number),
+      awaitingNextNumber: false
+    })   
+  }
+
+  decimal = () => {
+    if(this.state.awaitingNextNumber){
+      this.setState({
+        displayNums:[],
+        cache:[],
+        awaitingNextNumber: false
+      })
+    }
+
+    if(this.state.displayNums.includes('.')) return
+    this.setState({
+      displayNums:this.state.displayNums.concat('.'),
+      // cache:this.state.displayNums.concat('.'),
+      awaitingNextNumber: false
     })
   }
 
   render() {
     return (
       <div className="container">
-        <LCDDisplay memory={this.state.memory}/>
+        <LCDDisplay cache={this.state.displayNums}/>
         <Button className="buttonClear" buttonDisplay="clear" onClick={this.clear}/>
         <Button className="buttonPrimary" buttonDisplay="1" onClick={() => this.numpad(1)}/>
         <Button className="buttonPrimary" buttonDisplay="2" onClick={() => this.numpad(2)}/>
         <Button className="buttonPrimary" buttonDisplay="3" onClick={() => this.numpad(3)}/>
-        <Button className="buttonSecondary" buttonDisplay="/" onClick={this.divide}/>
+        <Button className="buttonSecondary" operations="/" buttonDisplay="÷" onClick={this.divide}/>
 
         <Button className="buttonPrimary" buttonDisplay="4" onClick={() => this.numpad(4)}/>
         <Button className="buttonPrimary" buttonDisplay="5" onClick={() => this.numpad(5)}/>
         <Button className="buttonPrimary" buttonDisplay="6" onClick={() => this.numpad(6)}/>
-        <Button className="buttonSecondary" buttonDisplay="*" onClick={this.multiply}/>
+        <Button className="buttonSecondary" operation="*" buttonDisplay="x" onClick={this.multiply}/>
 
         <Button className="buttonPrimary" buttonDisplay="7" onClick={() => this.numpad(7)}/>
         <Button className="buttonPrimary" buttonDisplay="8" onClick={() => this.numpad(8)}/>
         <Button className="buttonPrimary" buttonDisplay="9" onClick={() => this.numpad(9)}/>
-        <Button className="buttonSecondary" buttonDisplay="-" onClick={this.subtract}/>
+        <Button className="buttonSecondary" operation="-" buttonDisplay="-" onClick={this.subtract}/>
 
-        <Button className="buttonPrimary" buttonDisplay="." onClick={() => this.numpad(".")}/>
+        <Button className="buttonPrimary" buttonDisplay="." onClick={this.decimal}/>
         <Button className="buttonPrimary" buttonDisplay="0" onClick={() => this.numpad(0)}/>
         <Button className="buttonPrimary" buttonDisplay="=" onClick={this.equals}/>
-        <Button className="buttonSecondary" buttonDisplay="+" onClick={this.add}/>        
+        <Button className="buttonSecondary" operations="+" buttonDisplay="+" onClick={this.add}/>        
       </div>
     )
   }  
