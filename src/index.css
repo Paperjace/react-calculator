@@ -50,9 +50,8 @@ body {
 .lcdDisplay {
   grid-column: 1 / span 4;
   background-color: var(--powder-blue);
-  font-family: 'Segment7Standard';
-  font-weight: normal;
-  font-style: italic;
+  font-family: 'Cutive Mono', monospace;
+  font-weight: bold;
   color: #000000;
   text-align: right;
   height: 50px;

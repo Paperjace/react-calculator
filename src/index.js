@@ -7,18 +7,19 @@ function Button(props) {
 }
 
 function LCDDisplay(props) {
-  return <div className="lcdDisplay">{props.cache}</div>  
+  return <div className="lcdDisplay">{props.display}</div>  
 }
 
 class Calculator extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      displayNums: [0],
+      displayNums: ['0'],
       cache: [],
       result: 0,
-      awaitingNextNumber: false,
-      isFloat: false
+      isAwaitingNextNumber: false,
+      isFloat: false,
+      currentOperator: ''
     }
   }
 
@@ -27,7 +28,7 @@ class Calculator extends React.Component {
       displayNums:[0],
       cache: [],
       result: 0,
-      awaitingNextNumber: false,
+      isAwaitingNextNumber: false,
       isFloat: false
     })
   }
@@ -45,53 +46,62 @@ class Calculator extends React.Component {
   }
 
   add = () => {
-    const formattedNumber = this.state.displayNums.join('')
-    const parsedNumber = parseFloat(formattedNumber)
-    const mathResult = this.state.result + parsedNumber
+    if(this.state.isAwaitingNextNumber) return
+
+    if(!this.state.isAwaitingNextNumber) {
+      const formattedNumber = this.state.displayNums.join('')
+      const newFloat = parseFloat(formattedNumber)
+      const newResult = this.state.result + newFloat
+      
+      return this.setState({
+        displayNums: newResult,
+        cache: ['0'],
+        result: newResult,
+        currentOperator: '+'
+      })
+    }
     
+    const newOperation = this.state.cache.concat("+")
+
     this.setState({
-      result: mathResult,
-      awaitingNextNumber: true,
-      displayNums: [mathResult],
-      cache: [],
-      isFloat: false
+      isAwaitingNextNumber: true,
+      displayNums: newOperation,
+      cache: newOperation,
+      currentOperator: '+'
     })
   }
 
   equals = () => {
-    alert('you clicked EQUALS')
+  
   }
 
   numpad = (number) => {
     const newNumber = this.state.cache.concat(number)
 
-    if(this.state.awaitingNextNumber && this.state.isFloat){
+    if(this.state.isAwaitingNextNumber && this.state.isFloat){
       newNumber.splice(0, 0, '.')
     }
 
     this.setState({
       displayNums: newNumber,
       cache: newNumber,
-      awaitingNextNumber: false,
-      isFloat: false
+      isAwaitingNextNumber: false
     })   
   }
 
   decimal = () => {
-    if(this.state.displayNums.includes('.')) return
+    if(this.state.isFloat) return
 
-    if(this.state.awaitingNextNumber) {
+    if(this.state.isAwaitingNextNumber) {
       this.setState({
         displayNums:['.'],
-        cache:['.'],
-        awaitingNextNumber: false,
+        cache:['.'],        
         isFloat: true
       })      
     } else {
       this.setState({
-        displayNums:this.state.displayNums.concat('.'),
+        displayNums:this.state.displayNums.concat('.'),       
         cache:this.state.displayNums.concat('.'),
-        awaitingNextNumber: false,
         isFloat: true
       })      
     }
@@ -100,7 +110,11 @@ class Calculator extends React.Component {
   render() {
     return (
       <div className="container">
-        <LCDDisplay cache={this.state.displayNums}/>
+        
+        
+        <LCDDisplay display={this.state.displayNums}/>
+
+
         <Button className="buttonClear" buttonDisplay="clear" onClick={this.clear}/>
         <Button className="buttonPrimary" buttonDisplay="1" onClick={() => this.numpad(1)}/>
         <Button className="buttonPrimary" buttonDisplay="2" onClick={() => this.numpad(2)}/>
