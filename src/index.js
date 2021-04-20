@@ -65,7 +65,7 @@ class Calculator extends React.Component {
     // Calculate previous operation and prepare for next incoming number
     if(!this.state.isAwaitingNextNumber) {
       let finalResult = this.operations[this.state.currentOperator](this.state.result,newFloat)
-      
+
       if (finalResult.toString().length > 8 ) finalResult = finalResult.toExponential(8)
 
       return this.setState({
@@ -108,6 +108,8 @@ class Calculator extends React.Component {
   }
 
   decimal = () => {
+    if (this.state.isFloat) return 
+    
     if(this.state.isAwaitingNextNumber) {
       return this.setState({
         displayNums:['.'],
