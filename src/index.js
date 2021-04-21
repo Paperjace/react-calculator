@@ -14,12 +14,13 @@ class Calculator extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      displayNums: [0],
-      cache: [],
-      result: 0,
-      isAwaitingNextNumber: false,
-      isFloat: false,
-      currentOperator: ''
+      num1: [],
+      num2: [],
+      numDisplay: [0],      
+      result: [], // Updated when equals is pressed.
+      isAwaitingNextNumber: true, // When true, a new number is built in the display. Also used for various conditionals.
+      isFloat: false, // Number contains a decimal.
+      currentOperator: '' // The arithmetic operation to be performed.
     }
   }
 
@@ -32,18 +33,20 @@ class Calculator extends React.Component {
 
   clear = () => {
     this.setState({
-      displayNums:[0],
-      cache: [],
-      result: 0,
-      isAwaitingNextNumber: false,
+      num1: [],
+      num2: [],
+      numDisplay:[0],      
+      result: [],
+      isAwaitingNextNumber: true,
       isFloat: false,
       currentOperator: ''
     })
   }
 
   mathOperation = (thisOperator) => {
-    const formattedNumber = this.state.cache.join('')
-    const newFloat = parseFloat(formattedNumber)
+    // Join array of numbers together to make a single string of numbers.  Then use parseFloat() to make it a real integer/float number.
+    const formattedNumDisplay = this.state.numDisplay.join('')
+    const numDisplayFloat = parseFloat(formattedNumDisplay)
 
     // Only update this.state.operator if previous pressed button was an operator
     if(this.state.isAwaitingNextNumber) {
@@ -56,22 +59,21 @@ class Calculator extends React.Component {
     if(!this.state.isAwaitingNextNumber && this.state.currentOperator.length <= 0){
       return this.setState({
         currentOperator: thisOperator,
-        cache: [],
-        result: newFloat,
-        isAwaitingNextNumber: true
+        num1: [numDisplayFloat],
+        isAwaitingNextNumber: true,
+        isFloat: false
       })
     }
 
     // Calculate previous operation and prepare for next incoming number
     if(!this.state.isAwaitingNextNumber) {
-      let finalResult = this.operations[this.state.currentOperator](this.state.result,newFloat)
+      let finalResult = this.operations[this.state.currentOperator](this.state.num1[0],numDisplayFloat)
 
       if (finalResult.toString().length > 8 ) finalResult = finalResult.toExponential(8)
 
       return this.setState({
-        displayNums: [finalResult],
-        cache: [],
-        result: finalResult,
+        numDisplay: [finalResult],
+        num1: [finalResult],
         currentOperator: thisOperator,
         isAwaitingNextNumber: true
       })
@@ -79,48 +81,101 @@ class Calculator extends React.Component {
   }
 
   equals = () => {
-    if (!this.state.isAwaitingNextNumber && this.state.currentOperator.length > 0) {
-      const formattedNumber = this.state.cache.join('')
-      const newFloat = parseFloat(formattedNumber)
-      let finalResult = this.operations[this.state.currentOperator](this.state.result,newFloat)
+    // Handle when equals button is pressed consecutively
+    if(this.state.isAwaitingNextNumber){
+      // When operator button was the last button, prevent equals button from executing
+      if(this.state.result.length <= 0) return
+
+      // Calculate answer
+      let finalResult = this.operations[this.state.currentOperator](this.state.result,this.state.num2)
       
+      // If answer is longing than 8 characters, convert to exponential as truncation
       if (finalResult.toString().length > 8 ) finalResult = finalResult.toExponential(8)
 
       this.setState({
-        displayNums: [finalResult],
-        result: finalResult
+        num1: this.state.result,
+        numDisplay: [finalResult],
+        result: [finalResult],
+        isAwaitingNextNumber: true
+      })
+    }
+
+    // Handle first equals button press
+    if (!this.state.isAwaitingNextNumber && this.state.currentOperator.length > 0) {
+
+      // Join array of numbers together to make a single string of numbers.  Then use parseFloat() to make it a real integer/float number.
+      const formattedNum1 = this.state.num1.join('')
+      const num1Float = parseFloat(formattedNum1)
+
+      const formattedNumDisplay = this.state.numDisplay.join('')
+      const numDisplayFloat = parseFloat(formattedNumDisplay)
+
+      // Calculate answer
+      let finalResult = this.operations[this.state.currentOperator](num1Float,numDisplayFloat)
+      
+      // If answer is longing than 8 characters, convert to exponential as truncation
+      if (finalResult.toString().length > 8 ) finalResult = finalResult.toExponential(8)
+
+      this.setState({
+        num1: [num1Float],
+        num2: [numDisplayFloat],
+        numDisplay: [finalResult],
+        result: [finalResult],
+        isAwaitingNextNumber: true
       })
     }
   }
 
   numpad = (number) => {
-    let newNumber = this.state.cache
+    let newNumber
+    let clearState = {}
 
-    if (this.state.displayNums.length <= 8) {
+    // If a non-number was previously pressed, start concatenating a new set of numbers.  Otherwise, concatenate to what's in the display.
+    if (this.state.isAwaitingNextNumber) {
+      newNumber = []
+    } else {
+      newNumber = this.state.numDisplay
+    }
+    
+    // Limit input to 8 digits
+    if (this.state.numDisplay.length <= 8) {
       newNumber = newNumber.concat(number)
-    }    
+    }
+
+    // If equals button was previously pressed, clear all state.
+    if (this.state.result.length > 0) {
+      console.log(this.state.result.length)
+      clearState = {
+        num1: [],
+        num2: [],
+        result: [],
+        isFloat: false,
+        currentOperator: ''
+      }
+    }
 
     this.setState({
-      displayNums: newNumber,
-      cache: newNumber,
-      isAwaitingNextNumber: false
+      numDisplay: newNumber,
+      isAwaitingNextNumber: false,
+      ...clearState
     })   
   }
 
   decimal = () => {
+    // If decimal was pressed once for current number, return immediately. Effectively disables decimal button.
     if (this.state.isFloat) return 
     
+    // Start next number with a decimal if operator button was previously pressed.
     if(this.state.isAwaitingNextNumber) {
       return this.setState({
-        displayNums:['.'],
-        cache:['.'],        
-        isFloat: true
+        numDisplay:['.'],
+        isFloat: true,
+        isAwaitingNextNumber: false
       })      
     }
 
     this.setState({
-      displayNums:this.state.displayNums.concat('.'),       
-      cache:this.state.displayNums.concat('.'),
+      numDisplay:this.state.numDisplay.concat('.'),       
       isFloat: true
     })
   }
@@ -128,7 +183,7 @@ class Calculator extends React.Component {
   render() {
     return (
       <div className="container">
-        <LCDDisplay display={this.state.displayNums}/>
+        <LCDDisplay display={this.state.numDisplay}/>
 
         <Button className="buttonClear" buttonDisplay="clear" onClick={this.clear}/>
         <Button className="buttonPrimary" buttonDisplay="1" onClick={() => this.numpad(1)}/>
