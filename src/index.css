@@ -47,13 +47,16 @@ body {
   cursor:pointer;
 }
 
+@import url(//db.onlinewebfonts.com/c/99d83ce639db8eabf503017356550109?family=DigitalW00);
+@font-face {font-family: "Digital"; src: url("//db.onlinewebfonts.com/t/99d83ce639db8eabf503017356550109.eot"); src: url("//db.onlinewebfonts.com/t/99d83ce639db8eabf503017356550109.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/99d83ce639db8eabf503017356550109.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/99d83ce639db8eabf503017356550109.woff") format("woff"), url("//db.onlinewebfonts.com/t/99d83ce639db8eabf503017356550109.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/99d83ce639db8eabf503017356550109.svg#DigitalW00") format("svg"); }
+
 .lcdDisplay {
   grid-column: 1 / span 4;
   background-color: var(--powder-blue);
-  font-family: 'Cutive Mono', monospace;
-  font-weight: bold;
+  font-family: Digital, monospace;
   color: #000000;
   text-align: right;
+  line-height: .5;
   height: 50px;
   padding: 10px 10px 0 0;
 }
