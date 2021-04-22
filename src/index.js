@@ -87,7 +87,7 @@ class Calculator extends React.Component {
       if(this.state.result.length <= 0) return
 
       // Calculate answer
-      let finalResult = this.operations[this.state.currentOperator](this.state.result,this.state.num2)
+      let finalResult = this.operations[this.state.currentOperator](this.state.result[0],this.state.num2[0])
       
       // If answer is longing than 8 characters, convert to exponential as truncation
       if (finalResult.toString().length > 8 ) finalResult = finalResult.toExponential(8)
