@@ -48,8 +48,20 @@ class Calculator extends React.Component {
     const formattedNumDisplay = this.state.numDisplay.join('')
     const numDisplayFloat = parseFloat(formattedNumDisplay)
 
-    // Only update this.state.operator if previous pressed button was an operator
+    
     if(this.state.isAwaitingNextNumber) {
+      // Handle when operator is pressed after equals
+      if(this.state.result.length >= 1){
+        return this.setState({
+          currentOperator: thisOperator,
+          num1: [numDisplayFloat],
+          isAwaitingNextNumber: true,
+          isFloat: false,
+          result: []
+        })
+      }
+
+      // Only update this.state.operator if previous pressed button was an operator
       return this.setState({
         currentOperator: thisOperator
       })
