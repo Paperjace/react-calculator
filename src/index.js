@@ -10,6 +10,10 @@ function LCDDisplay(props) {
   return <div className="lcdDisplay">{props.display}</div>  
 }
 
+function History(props) {
+  return <div className={props.className}>{props.history}</div>
+}
+
 class Calculator extends React.Component {
   constructor(props){
     super(props)
@@ -20,7 +24,8 @@ class Calculator extends React.Component {
       result: [], // Updated when equals is pressed.
       isAwaitingNextNumber: true, // When true, a new number is built in the display. Also used for various conditionals.
       isFloat: false, // Number contains a decimal.
-      currentOperator: '' // The arithmetic operation to be performed.
+      currentOperator: '',  // The arithmetic operation to be performed.
+      history: [] // Accumulated button presses until "Clear" is pressed
     }
   }
 
@@ -39,7 +44,8 @@ class Calculator extends React.Component {
       result: [],
       isAwaitingNextNumber: true,
       isFloat: false,
-      currentOperator: ''
+      currentOperator: '',
+      history: []
     })
   }
 
@@ -48,7 +54,8 @@ class Calculator extends React.Component {
     // Then use parseFloat() to convert it from a string to a real integer/float number.
     const formattedNumDisplay = this.state.numDisplay.join('')
     const numDisplayFloat = parseFloat(formattedNumDisplay)
-    
+    const historyObject = { history: this.state.history.concat(thisOperator) }
+
     if(this.state.isAwaitingNextNumber) {
       // Handle when operator is pressed after equals
       if(this.state.result.length >= 1){
@@ -57,13 +64,15 @@ class Calculator extends React.Component {
           num1: [numDisplayFloat],
           isAwaitingNextNumber: true,
           isFloat: false,
-          result: []
+          result: [],
+          ...historyObject
         })
       }
 
       // Only update this.state.operator if previous pressed button was an operator
       return this.setState({
-        currentOperator: thisOperator
+        currentOperator: thisOperator,
+        ...historyObject
       })
     }
 
@@ -74,7 +83,8 @@ class Calculator extends React.Component {
           currentOperator: thisOperator,
           num1: [numDisplayFloat],
           isAwaitingNextNumber: true,
-          isFloat: false
+          isFloat: false,
+          ...historyObject
         })
       }
 
@@ -87,12 +97,15 @@ class Calculator extends React.Component {
         numDisplay: [finalResult],
         num1: [finalResult],
         currentOperator: thisOperator,
-        isAwaitingNextNumber: true
+        isAwaitingNextNumber: true,
+        ...historyObject
       })
     }
   }
 
   equals = () => {
+    const historyObject = { history: this.state.history.concat('=') }
+
     // Handle when equals button is pressed consecutively
     if(this.state.isAwaitingNextNumber){
       // When operator button was the last button, prevent equals button from executing
@@ -108,7 +121,8 @@ class Calculator extends React.Component {
         num1: this.state.result,
         numDisplay: [finalResult],
         result: [finalResult],
-        isAwaitingNextNumber: true
+        isAwaitingNextNumber: true,
+        ...historyObject
       })
     }
 
@@ -133,12 +147,14 @@ class Calculator extends React.Component {
         num2: [numDisplayFloat],
         numDisplay: [finalResult],
         result: [finalResult],
-        isAwaitingNextNumber: true
+        isAwaitingNextNumber: true,
+        ...historyObject
       })
     }
   }
 
   numpad = (number) => {
+    const historyObject = { history: this.state.history.concat(number) }
     // If a non-number was previously pressed, start concatenating a new set of numbers.  
     //Otherwise, concatenate to what's in the display.
     let newNumber = (this.state.isAwaitingNextNumber ? [] : this.state.numDisplay)
@@ -163,55 +179,65 @@ class Calculator extends React.Component {
     this.setState({
       numDisplay: newNumber,
       isAwaitingNextNumber: false,
-      ...clearState
+      ...clearState,
+      ...historyObject
     })   
   }
 
   decimal = () => {
+    const historyObject = { history: this.state.history.concat('.') }
     // If decimal was pressed once for current number, return immediately. Effectively disables decimal button.
-    if (this.state.isFloat) return 
+    if (this.state.isFloat) return
+    if (this.state.numDisplay.length >= 8) return
     
     // Start next number with a decimal if operator button was previously pressed.
     if(this.state.isAwaitingNextNumber) {
       return this.setState({
         numDisplay:['.'],
         isFloat: true,
-        isAwaitingNextNumber: false
+        isAwaitingNextNumber: false,
+        ...historyObject
       })      
     }
 
     this.setState({
       numDisplay:this.state.numDisplay.concat('.'),       
-      isFloat: true
+      isFloat: true,
+      ...historyObject
     })
   }
 
   render() {
     return (
-      <div className="container">
-        <LCDDisplay display={this.state.numDisplay}/>
+      <div>
+        <div className="container">
+          <LCDDisplay display={this.state.numDisplay}/>
 
-        <Button className="buttonClear" buttonDisplay="clear" onClick={this.clear}/>
-        <Button className="buttonPrimary" buttonDisplay="1" onClick={() => this.numpad(1)}/>
-        <Button className="buttonPrimary" buttonDisplay="2" onClick={() => this.numpad(2)}/>
-        <Button className="buttonPrimary" buttonDisplay="3" onClick={() => this.numpad(3)}/>
-        <Button className="buttonSecondary" buttonDisplay="÷" onClick={(e) => this.mathOperation('/', e)}/>
+          <Button className="buttonClear" buttonDisplay="clear" onClick={this.clear}/>
+          <Button className="buttonPrimary" buttonDisplay="1" onClick={() => this.numpad(1)}/>
+          <Button className="buttonPrimary" buttonDisplay="2" onClick={() => this.numpad(2)}/>
+          <Button className="buttonPrimary" buttonDisplay="3" onClick={() => this.numpad(3)}/>
+          <Button className="buttonSecondary" buttonDisplay="÷" onClick={(e) => this.mathOperation('/', e)}/>
 
-        <Button className="buttonPrimary" buttonDisplay="4" onClick={() => this.numpad(4)}/>
-        <Button className="buttonPrimary" buttonDisplay="5" onClick={() => this.numpad(5)}/>
-        <Button className="buttonPrimary" buttonDisplay="6" onClick={() => this.numpad(6)}/>
-        <Button className="buttonSecondary" buttonDisplay="x" onClick={(e) => this.mathOperation('*', e)}/>
+          <Button className="buttonPrimary" buttonDisplay="4" onClick={() => this.numpad(4)}/>
+          <Button className="buttonPrimary" buttonDisplay="5" onClick={() => this.numpad(5)}/>
+          <Button className="buttonPrimary" buttonDisplay="6" onClick={() => this.numpad(6)}/>
+          <Button className="buttonSecondary" buttonDisplay="x" onClick={(e) => this.mathOperation('*', e)}/>
 
-        <Button className="buttonPrimary" buttonDisplay="7" onClick={() => this.numpad(7)}/>
-        <Button className="buttonPrimary" buttonDisplay="8" onClick={() => this.numpad(8)}/>
-        <Button className="buttonPrimary" buttonDisplay="9" onClick={() => this.numpad(9)}/>
-        <Button className="buttonSecondary" buttonDisplay="-" onClick={(e) => this.mathOperation('-', e)}/>
+          <Button className="buttonPrimary" buttonDisplay="7" onClick={() => this.numpad(7)}/>
+          <Button className="buttonPrimary" buttonDisplay="8" onClick={() => this.numpad(8)}/>
+          <Button className="buttonPrimary" buttonDisplay="9" onClick={() => this.numpad(9)}/>
+          <Button className="buttonSecondary" buttonDisplay="-" onClick={(e) => this.mathOperation('-', e)}/>
 
-        <Button className="buttonPrimary" buttonDisplay="." onClick={this.decimal}/>
-        <Button className="buttonPrimary" buttonDisplay="0" onClick={() => this.numpad(0)}/>
-        <Button className="buttonPrimary" buttonDisplay="=" onClick={this.equals}/>
-        <Button className="buttonSecondary" buttonDisplay="+" onClick={(e) => this.mathOperation('+', e)}/>        
+          <Button className="buttonPrimary" buttonDisplay="." onClick={this.decimal}/>
+          <Button className="buttonPrimary" buttonDisplay="0" onClick={() => this.numpad(0)}/>
+          <Button className="buttonPrimary" buttonDisplay="=" onClick={this.equals}/>
+          <Button className="buttonSecondary" buttonDisplay="+" onClick={(e) => this.mathOperation('+', e)}/>        
+        </div>
+        <br />
+        <History className="history" history={this.state.history} />
       </div>
+      
     )
   }  
 }

@@ -57,3 +57,11 @@ body {
   height: 50px;
   padding: 10px 10px 0 0;
 }
+
+.history {
+  border: 3px #f1faee solid; 
+  max-width: 10em;
+  padding: 30px;
+  margin: 0 auto;
+  word-break: break-all;
+}
