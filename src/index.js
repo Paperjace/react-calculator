@@ -243,8 +243,8 @@ class Calculator extends React.Component {
           <Button className="buttonPrimary" buttonDisplay="=" onClick={this.equals}/>
           <Button className="buttonSecondary" buttonDisplay="+" onClick={(e) => this.mathOperation('+', e)}/>        
         </div>
-        <br />
-        <History className="history" history={this.state.history} />
+        {/* <br />
+        <History className="history" history={this.state.history} /> */}
       </div>
       
     )
