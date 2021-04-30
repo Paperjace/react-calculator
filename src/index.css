@@ -47,6 +47,15 @@ body {
   cursor:pointer;
 }
 
+.buttonBackspace {
+  grid-column: 3 / span 1;
+  text-align: center;
+  padding: 10px 0;
+  background-color:var(--imperial-red);
+  border: 3px var(--powder-blue) solid;
+  cursor:pointer;
+}
+
 @import url(//db.onlinewebfonts.com/c/99d83ce639db8eabf503017356550109?family=DigitalW00);
 @font-face {font-family: "Digital"; src: url("//db.onlinewebfonts.com/t/99d83ce639db8eabf503017356550109.eot"); src: url("//db.onlinewebfonts.com/t/99d83ce639db8eabf503017356550109.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/99d83ce639db8eabf503017356550109.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/99d83ce639db8eabf503017356550109.woff") format("woff"), url("//db.onlinewebfonts.com/t/99d83ce639db8eabf503017356550109.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/99d83ce639db8eabf503017356550109.svg#DigitalW00") format("svg"); }
 
