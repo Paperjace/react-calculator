@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
+
 function Button(props) {
   return <div className={props.className} onClick={props.onClick}>{props.buttonDisplay}</div>
 }
@@ -46,6 +47,13 @@ class Calculator extends React.Component {
       isFloat: false,
       currentOperator: '',
       history: []
+    })
+  }
+
+  backspace = () => {
+    const numDisplay = this.state.numDisplay
+    this.setState({
+      numDisplay: numDisplay.slice(0, numDisplay.length - 1)
     })
   }
 
@@ -213,7 +221,8 @@ class Calculator extends React.Component {
         <div className="container">
           <LCDDisplay display={this.state.numDisplay}/>
 
-          <Button className="buttonClear" buttonDisplay="clear" onClick={this.clear}/>
+          <Button className="buttonBackspace" buttonDisplay="<X" onClick={this.backspace}/>
+          <Button className="buttonClear" buttonDisplay="C" onClick={this.clear}/>
           <Button className="buttonPrimary" buttonDisplay="1" onClick={() => this.numpad(1)}/>
           <Button className="buttonPrimary" buttonDisplay="2" onClick={() => this.numpad(2)}/>
           <Button className="buttonPrimary" buttonDisplay="3" onClick={() => this.numpad(3)}/>
