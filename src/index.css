@@ -4,6 +4,7 @@
   --powder-blue: #a8dadcff;
   --celadon-blue: #457b9dff;
   --prussian-blue: #1d3557ff;
+  --fadeValue: 1;
 }
 
 body {
@@ -63,7 +64,7 @@ body {
   grid-column: 1 / span 4;
   background-color: var(--powder-blue);
   font-family: Digital, monospace;
-  color: #000000;
+  color: rgba(0, 0, 0, 1);
   text-align: right;
   line-height: .5;
   height: 50px;
@@ -73,6 +74,16 @@ body {
 .solarPanel {
   grid-column: 1 / span 2;
   background-color:brown;
+}
+
+.powerOff {
+  opacity:0;
+  transition: opacity 5s;
+}
+
+.powerOn {
+  opacity: 1;
+  transition: opacity 1s;
 }
 
 .history {

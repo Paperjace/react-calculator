@@ -8,17 +8,24 @@ function Button(props) {
 }
 
 function LCDDisplay(props) {
-  return <div className="lcdDisplay">{props.display}</div>  
+  return <div className="lcdDisplay">
+    <div className={props.solarClass}>{props.display}</div>
+    </div>
 }
 
-function History(props) {
-  return <div className={props.className}>{props.history}</div>
+function SolarPanel(props) {
+  return <div className="solarPanel" onMouseOver={props.onMouseOver} onMouseLeave={props.onMouseLeave}></div>
 }
+
+// function History(props) {
+//   return <div className={props.className}>{props.history}</div>
+// }
 
 class Calculator extends React.Component {
   constructor(props){
     super(props)
     this.state = {
+      solarState: 'powerOn',
       num1: [],
       num2: [],
       numDisplay: [0],      
@@ -215,12 +222,27 @@ class Calculator extends React.Component {
     })
   }
 
+  fadeOutDisplay = () => {
+    console.log('entered')
+    this.setState({
+      solarState: 'powerOff'
+    })
+  }
+
+  fadeInDisplay = () => {
+    console.log('entered')
+    this.setState({
+      solarState: 'powerOn'
+    })
+  }
+
   render() {
     return (
       <div>
         <div className="container">
-          <LCDDisplay display={this.state.numDisplay}/>
+          <LCDDisplay display={this.state.numDisplay} solarClass={this.state.solarState}/>
 
+          <SolarPanel onMouseOver={this.fadeOutDisplay} onMouseLeave={this.fadeInDisplay} />
           <Button className="buttonBackspace" buttonDisplay="<X" onClick={this.backspace}/>
           <Button className="buttonClear" buttonDisplay="C" onClick={this.clear}/>
           <Button className="buttonPrimary" buttonDisplay="1" onClick={() => this.numpad(1)}/>
