@@ -59,8 +59,10 @@ class Calculator extends React.Component {
 
   backspace = () => {
     const numDisplay = this.state.numDisplay
+    const isFloat = (this.state.numDisplay[this.state.numDisplay.length - 1] === '.' ? false : this.state.isFloat)
     this.setState({
-      numDisplay: numDisplay.slice(0, numDisplay.length - 1)
+      numDisplay: numDisplay.slice(0, numDisplay.length - 1),
+      isFloat: isFloat
     })
   }
 
