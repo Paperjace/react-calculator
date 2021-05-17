@@ -8,17 +8,18 @@
 }
 
 body {
-    font: 44px "Century Gothic", Futura, sans-serif;
+    font: 16px "Century Gothic", Futura, sans-serif;
     background-color: var(--prussian-blue);
     color: var(--honeydew)
   }
 
 .container {
+  font-size: 2.5em;
   display: grid;
-  grid-gap: 10px;
+  grid-gap: 0.1em;
   grid-template-columns: auto auto auto auto;
   max-width: 10em;
-  padding: 30px;
+  padding: 0.3em;
   border: 3px #f1faee solid;
   margin: auto
 }
@@ -27,7 +28,7 @@ body {
   text-align: center;
   padding: 10px;
   background-color: var(--celadon-blue);
-  border: 3px var(--powder-blue) solid;
+  /* border: 3px var(--powder-blue) solid; */
   cursor:pointer;
 }
 
@@ -35,7 +36,7 @@ body {
   text-align: center;
   padding: 10px;
   background-color:var(--imperial-red);
-  border: 3px var(--powder-blue) solid;
+  /* border: 3px var(--powder-blue) solid; */
   cursor:pointer;
 }
 
@@ -44,7 +45,7 @@ body {
   text-align: center;
   padding: 10px;
   background-color:var(--imperial-red);
-  border: 3px var(--powder-blue) solid;
+  /* border: 3px var(--powder-blue) solid; */
   cursor:pointer;
 }
 
@@ -53,7 +54,7 @@ body {
   text-align: center;
   padding: 10px 0;
   background-color:var(--imperial-red);
-  border: 3px var(--powder-blue) solid;
+  /* border: 3px var(--powder-blue) solid; */
   cursor:pointer;
 }
 
