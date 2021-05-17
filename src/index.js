@@ -1,25 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Button from './button'
+import LCDDisplay from './lcdDisplay'
+import SolarPanel from './solarPanel'
+// import History from './history'
+
 import './index.css';
 
-
-function Button(props) {
-  return <div className={props.className} onClick={props.onClick}>{props.buttonDisplay}</div>
-}
-
-function LCDDisplay(props) {
-  return <div className="lcdDisplay">
-    <div className={props.solarClass}>{props.display}</div>
-    </div>
-}
-
-function SolarPanel(props) {
-  return <div className="solarPanel" onMouseOver={props.onMouseOver} onMouseLeave={props.onMouseLeave}></div>
-}
-
-// function History(props) {
-//   return <div className={props.className}>{props.history}</div>
-// }
 
 class Calculator extends React.Component {
   constructor(props){
